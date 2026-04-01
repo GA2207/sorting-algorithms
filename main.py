@@ -1,3 +1,5 @@
+import random
+import time
 from sorting import ALGORITHMS
 
 
@@ -24,6 +26,7 @@ def choose_algorithm():
     print("\nChoisissez un algorithme de tri :\n")
     for key, (name, _) in ALGORITHMS.items():
         print(f"  {key}. {name}")
+    print(f"  8. Comparer les performances")
     print(f"  0. Quitter")
     print()
 
@@ -31,6 +34,8 @@ def choose_algorithm():
         choice = input("Votre choix : ").strip()
         if choice == "0":
             return None
+        if choice == "8":
+            return "benchmark"
         if choice in ALGORITHMS:
             return choice
         print("Choix invalide. Reessayez.")
@@ -43,12 +48,62 @@ def display_result(name, original, sorted_list):
     print(f"  Output : {sorted_list}")
 
 
+def benchmark():
+    """Compare les performances des algorithmes sur une grosse liste."""
+    print("\n========================================")
+    print("   Benchmark - Comparaison des performances")
+    print("========================================")
+
+    taille = 10000
+    grosse_liste = [random.randint(1, 100000) for _ in range(taille)]
+    print(f"\nListe generee : {taille} elements aleatoires")
+
+    resultats = {}
+
+    for key, (name, sort_func) in ALGORITHMS.items():
+        # chaque algo recoit sa propre copie de la liste
+        liste_copie = grosse_liste.copy()
+        try:
+            print(f"\nLancement du {name}...")
+            start_time = time.time()
+            sort_func(liste_copie)
+            temps = time.time() - start_time
+            resultats[name] = temps
+            print(f"  Termine en : {temps:.6f} secondes")
+        except NotImplementedError:
+            print(f"  [!] Non implemente")
+
+    # VERDICT
+    if resultats:
+        print("\n========================================")
+        print("   Le verdict")
+        print("========================================\n")
+
+        # trier les resultats du plus rapide au plus lent
+        classement = sorted(resultats.items(), key=lambda x: x[1])
+
+        for i, (name, temps) in enumerate(classement, 1):
+            print(f"  {i}. {name} : {temps:.6f} secondes")
+
+        plus_rapide = classement[0]
+        plus_lent = classement[-1]
+
+        if plus_rapide[1] > 0:
+            ratio = plus_lent[1] / plus_rapide[1]
+            print(f"\n  {plus_rapide[0]} est environ {ratio:.0f}x plus rapide que {plus_lent[0]}")
+
+
 def main():
     while True:
         choice = choose_algorithm()
         if choice is None:
             print("\nAu revoir !")
             break
+
+        if choice == "benchmark":
+            benchmark()
+            input("\nAppuyez sur Entree pour continuer...")
+            continue
 
         name, sort_func = ALGORITHMS[choice]
         lst = get_user_list()
