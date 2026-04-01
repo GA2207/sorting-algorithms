@@ -27,10 +27,15 @@ element "remonte" comme une bulle vers la fin de la liste."""
 def bubble_sort(arr):
     n = len(arr)
     for i in range(n):
+        swapped = False
         for j in range(0, n - i - 1):
             # si l'element actuel est plus grand que le suivant, on echange
             if arr[j] > arr[j + 1]:
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
+                swapped = True
+        # si aucun echange n'a eu lieu, la liste est deja triee
+        if not swapped:
+            break
     return arr
 
 
@@ -53,35 +58,3 @@ def insertion_sort(arr):
         arr[j + 1] = key
     return arr
 
-
-# === Algorithmes a implementer par les autres membres ===
-
-def merge_sort(arr):
-    """Tri fusion - Merge Sort (HIBA)"""
-    raise NotImplementedError("A implementer par HIBA")
-
-
-def quick_sort(arr):
-    """Tri rapide - Quick Sort (HIBA)"""
-    raise NotImplementedError("A implementer par HIBA")
-
-
-def heap_sort(arr):
-    """Tri par tas - Heap Sort (Lukas)"""
-    raise NotImplementedError("A implementer par Lukas")
-
-
-def comb_sort(arr):
-    """Tri a peigne - Comb Sort (Lukas)"""
-    raise NotImplementedError("A implementer par Lukas")
-
-
-ALGORITHMS = {
-    "1": ("Tri par selection", selection_sort),
-    "2": ("Tri a bulles", bubble_sort),
-    "3": ("Tri par insertion", insertion_sort),
-    "4": ("Tri fusion", merge_sort),
-    "5": ("Tri rapide", quick_sort),
-    "6": ("Tri par tas", heap_sort),
-    "7": ("Tri a peigne", comb_sort),
-}
