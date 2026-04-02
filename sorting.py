@@ -4,7 +4,7 @@ import sys
 sys.setrecursionlimit(50000)
 
 
-# ACTE I : La force brute - Le tri par selection
+# ACTE I : La force brute - Le tri par selection - Complexite : O(N^2)
 """C'est l'algo naif : on parcourt toute la liste pour trouver le plus petit element,
 on l'echange avec le 1er element non trie, et ainsi de suite.
 Il utilise des boucles imbriquees : pour N elements, il fait N^2 iterations."""
@@ -25,7 +25,7 @@ def selection_sort(arr):
     return arr
 
 
-# ACTE II : La methode classique - Le tri a bulles
+# ACTE II : La methode classique - Le tri a bulles - Complexite : O(N^2)
 """On compare chaque paire d'elements adjacents et on les echange
 s'ils sont dans le mauvais ordre. A chaque passage, le plus grand
 element "remonte" comme une bulle vers la fin de la liste."""
@@ -45,7 +45,7 @@ def bubble_sort(arr):
     return arr
 
 
-# ACTE III : L'approche du joueur de cartes - Le tri par insertion
+# ACTE III : L'approche du joueur de cartes - Le tri par insertion - Complexite : O(N^2)
 """Comme quand on trie des cartes dans sa main : on prend chaque element
 et on l'insere a sa bonne place dans la partie deja triee de la liste."""
 
@@ -65,10 +65,10 @@ def insertion_sort(arr):
     return arr
 
 
-# ACTE IV : Diviser pour regner - Le tri fusion
+# ACTE IV : Diviser pour regner - Le tri fusion - Complexite : O(N log N)
 """On divise la liste en deux moities, on trie chaque moitie recursivement,
 puis on fusionne les deux moities triees en une seule liste ordonnee.
-C'est un algo stable et performant en O(n log n) dans tous les cas."""
+C'est un algo stable et performant en O(N log N) dans tous les cas."""
 
 def merge_sort(arr):
     if len(arr) <= 1:
@@ -108,7 +108,7 @@ def merge_sort(arr):
     return arr
 
 
-# ACTE V : Le pivot decisif - Le tri rapide
+# ACTE V : Le pivot decisif - Le tri rapide - Complexite : O(N log N) en moyenne, O(N^2) au pire cas
 """Concept : on choisit un element (le pivot), on place tous les elements
 plus petits a sa gauche et plus grands a sa droite.
 Le pivot est a sa place definitive, puis on s'appelle soi-meme
