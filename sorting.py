@@ -117,7 +117,9 @@ def merge_sort(arr):
 plus petits a sa gauche et plus grands a sa droite.
 Le pivot est a sa place definitive, puis on s'appelle soi-meme
 (recursivite) sur la sous-liste de gauche et de droite.
-Complexite : O(N log N) en moyenne, O(N^2) au pire cas"""
+Complexite : O(N log N) en moyenne, O(N^2) au pire cas
+Exemple pire cas : liste deja triee [1, 2, 3, 4, 5] avec pivot = 1er element,
+chaque appel ne separe qu'un seul element -> N niveaux x N comparaisons = N^2"""
 
 def quick_sort(arr):
     # condition d'arret : une liste vide ou 1 element est deja triee
