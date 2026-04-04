@@ -138,16 +138,79 @@ def quick_sort(arr):
     return quick_sort(gauche) + milieu + quick_sort(droite)
 
 
-# === Algorithmes a implementer par HIBA ===
+# ACTE VI : L'arbre du savoir - Le tri par tas
+"""On transforme la liste en un arbre binaire special (tas max) ou chaque parent
+est plus grand que ses enfants. On extrait le plus grand element (la racine),
+on le place a la fin, puis on reconstruit le tas avec le reste.
+Complexite : O(N log N)"""
 
 def heap_sort(arr):
-    """Tri par tas - Heap Sort (HIBA)"""
-    raise NotImplementedError("A implementer par HIBA")
+    n = len(arr)
 
+    # on construit le tas max (heapify) a partir du dernier noeud parent
+    for i in range(n // 2 - 1, -1, -1):
+        _heapify(arr, n, i)
+
+    # on extrait les elements un par un du tas
+    for i in range(n - 1, 0, -1):
+        # le plus grand element (racine) va a la fin
+        arr[0], arr[i] = arr[i], arr[0]
+        # on reconstruit le tas sur la partie non triee
+        _heapify(arr, i, 0)
+
+    return arr
+
+
+def _heapify(arr, n, i):
+    """Maintient la propriete du tas max : le parent est toujours plus grand que ses enfants."""
+    plus_grand = i
+    gauche = 2 * i + 1
+    droite = 2 * i + 2
+
+    # verifie si l'enfant gauche est plus grand que le parent
+    if gauche < n and arr[gauche] > arr[plus_grand]:
+        plus_grand = gauche
+
+    # verifie si l'enfant droit est plus grand que le plus grand actuel
+    if droite < n and arr[droite] > arr[plus_grand]:
+        plus_grand = droite
+
+    # si le plus grand n'est pas le parent, on echange et on continue
+    if plus_grand != i:
+        arr[i], arr[plus_grand] = arr[plus_grand], arr[i]
+        _heapify(arr, n, plus_grand)
+
+
+# ACTE VII : Le peigne magique - Le tri a peigne
+"""Amelioration du tri a bulles : au lieu de comparer des elements adjacents (ecart = 1),
+on commence avec un grand ecart qu'on reduit progressivement par un facteur de 1.3.
+Cela permet de deplacer les petits elements en fin de liste (les "tortues") plus vite.
+Complexite : O(N^2 / 2^p) en moyenne, meilleur que le tri a bulles classique"""
 
 def comb_sort(arr):
-    """Tri a peigne - Comb Sort (HIBA)"""
-    raise NotImplementedError("A implementer par HIBA")
+    n = len(arr)
+    # l'ecart initial est la taille de la liste
+    ecart = n
+    # facteur de reduction de l'ecart
+    retrecissement = 1.3
+    trie = False
+
+    while not trie:
+        # on reduit l'ecart
+        ecart = int(ecart / retrecissement)
+        if ecart <= 1:
+            ecart = 1
+            trie = True
+
+        # on compare les elements avec l'ecart actuel
+        i = 0
+        while i + ecart < n:
+            if arr[i] > arr[i + ecart]:
+                arr[i], arr[i + ecart] = arr[i + ecart], arr[i]
+                trie = False
+            i += 1
+
+    return arr
 
 
 ALGORITHMS = {
