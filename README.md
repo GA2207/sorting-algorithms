@@ -44,18 +44,6 @@ Le programme affiche un menu permettant de :
 4. Comparer les performances (option 8)
 5. Benchmark multithreading (option 9)
 
-### Interface graphique Pygame (visual.py)
-
-```bash
-python visual.py
-```
-
-- **C + numéro** : visualisation en cercle de couleurs
-- **B + numéro** : visualisation en barres verticales
-- **8** : diagramme en barres comparatif
-- **9** : courbes d'évolution multi-tailles
-- **R** : retour au menu
-
 ### Interface web Streamlit (app.py)
 
 ```bash
@@ -80,7 +68,6 @@ python -m pytest test_sorting.py -v
 
 - `sorting.py` : Implémentation des 7 algorithmes de tri + classe Stats (compteur d'opérations)
 - `main.py` : Script principal (menu, tri croissant/décroissant, benchmark, multithreading, export CSV)
-- `visual.py` : Interface graphique Pygame (cercle, barres, benchmark, courbes)
 - `app.py` : Interface web Streamlit
 - `test_sorting.py` : Tests unitaires
 - `README.md` : Documentation du projet
