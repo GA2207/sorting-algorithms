@@ -273,7 +273,7 @@ def benchmark_graphique(screen):
     """Lance les 7 algos, chronometre chacun et affiche un diagramme en barres."""
     from sorting import ALGORITHMS as SORT_ALGORITHMS
 
-    NB_BENCH = 5000
+    NB_BENCH = 10000
     grosse_liste = [random.randint(1, 100000) for _ in range(NB_BENCH)]
 
     # ecran de chargement
