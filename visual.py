@@ -69,6 +69,20 @@ def dessiner_cercle(screen, arr, maximum, titre=""):
     pygame.display.flip()
 
 
+def dessiner_bouton_retour(screen):
+    """Dessine un bouton 'Retour au menu' en bas de l'ecran."""
+    font = pygame.font.SysFont("Arial", 20, bold=True)
+    texte = font.render("Retour au menu (Appuyez R)", True, NOIR)
+    rect = texte.get_rect(center=(LARGEUR // 2, HAUTEUR - 40))
+    # fond du bouton
+    bouton_rect = rect.inflate(30, 16)
+    pygame.draw.rect(screen, GRIS, bouton_rect, border_radius=8)
+    pygame.draw.rect(screen, BLANC, bouton_rect, 2, border_radius=8)
+    screen.blit(texte, rect)
+    pygame.display.flip()
+    return bouton_rect
+
+
 # ======================== ALGORITHMES VISUELS ========================
 # Chaque algo appelle dessiner_cercle() a chaque etape pour montrer le tri
 
@@ -313,13 +327,17 @@ def main():
         dessiner_cercle(screen, arr, maximum, f"{nom} - Etat initial")
         time.sleep(1)
 
-        # lancer le tri visuel
+        # lancer le tri visuel avec chronometre
+        start_time = time.time()
         resultat = sort_func(arr, screen, maximum, nom)
+        temps_tri = time.time() - start_time
 
         if resultat:
-            # afficher le resultat final
-            dessiner_cercle(screen, arr, maximum, f"{nom} - Trie !")
-            # attendre que l'utilisateur appuie sur une touche
+            # afficher le resultat final avec le temps de tri
+            dessiner_cercle(screen, arr, maximum, f"{nom} - Trie en {temps_tri:.4f}s")
+            bouton_rect = dessiner_bouton_retour(screen)
+
+            # attendre que l'utilisateur clique sur le bouton ou appuie sur R
             attente = True
             while attente:
                 for event in pygame.event.get():
@@ -327,7 +345,11 @@ def main():
                         en_cours = False
                         attente = False
                     elif event.type == pygame.KEYDOWN:
-                        attente = False
+                        if event.key == pygame.K_r:
+                            attente = False
+                    elif event.type == pygame.MOUSEBUTTONDOWN:
+                        if bouton_rect.collidepoint(event.pos):
+                            attente = False
 
     pygame.quit()
 
