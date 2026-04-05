@@ -269,6 +269,109 @@ VISUAL_ALGORITHMS = {
 }
 
 
+def benchmark_graphique(screen):
+    """Lance les 7 algos, chronometre chacun et affiche un diagramme en barres."""
+    from sorting import ALGORITHMS as SORT_ALGORITHMS
+
+    NB_BENCH = 5000
+    grosse_liste = [random.randint(1, 100000) for _ in range(NB_BENCH)]
+
+    # ecran de chargement
+    screen.fill(NOIR)
+    font = pygame.font.SysFont("Arial", 28, bold=True)
+    texte = font.render("Benchmark en cours...", True, BLANC)
+    screen.blit(texte, texte.get_rect(center=(LARGEUR // 2, HAUTEUR // 2)))
+    pygame.display.flip()
+
+    resultats = []
+    for key, (name, sort_func) in SORT_ALGORITHMS.items():
+        liste_copie = grosse_liste.copy()
+        start = time.time()
+        sort_func(liste_copie)
+        temps = time.time() - start
+        resultats.append((name, temps))
+        # garder pygame reactif
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return False
+
+    # trier du plus rapide au plus lent
+    resultats.sort(key=lambda x: x[1])
+
+    # ======================== DESSINER LE GRAPHIQUE ========================
+    screen.fill(NOIR)
+
+    font_titre = pygame.font.SysFont("Arial", 26, bold=True)
+    font_label = pygame.font.SysFont("Arial", 14, bold=True)
+    font_valeur = pygame.font.SysFont("Arial", 13)
+
+    titre = font_titre.render(f"Comparaison des performances ({NB_BENCH} elements)", True, BLANC)
+    screen.blit(titre, titre.get_rect(center=(LARGEUR // 2, 40)))
+
+    # zone du graphique
+    marge_gauche = 80
+    marge_droite = 40
+    marge_haut = 90
+    marge_bas = 120
+    zone_largeur = LARGEUR - marge_gauche - marge_droite
+    zone_hauteur = HAUTEUR - marge_haut - marge_bas
+
+    # axes
+    pygame.draw.line(screen, BLANC, (marge_gauche, marge_haut), (marge_gauche, marge_haut + zone_hauteur), 2)
+    pygame.draw.line(screen, BLANC, (marge_gauche, marge_haut + zone_hauteur), (marge_gauche + zone_largeur, marge_haut + zone_hauteur), 2)
+
+    temps_max = max(t for _, t in resultats)
+    nb_algos = len(resultats)
+    largeur_barre = zone_largeur // nb_algos - 16
+
+    # couleurs pour chaque barre
+    couleurs_barres = [
+        (231, 76, 60),
+        (230, 126, 34),
+        (241, 196, 15),
+        (46, 204, 113),
+        (52, 152, 219),
+        (155, 89, 182),
+        (26, 188, 156),
+    ]
+
+    # graduations sur l'axe Y
+    nb_grad = 5
+    for i in range(nb_grad + 1):
+        y = marge_haut + zone_hauteur - int(zone_hauteur * i / nb_grad)
+        val = temps_max * i / nb_grad
+        pygame.draw.line(screen, (60, 60, 60), (marge_gauche, y), (marge_gauche + zone_largeur, y), 1)
+        label = font_valeur.render(f"{val:.3f}s", True, GRIS)
+        screen.blit(label, (marge_gauche - label.get_width() - 8, y - 8))
+
+    # barres
+    for i, (name, temps) in enumerate(resultats):
+        x = marge_gauche + i * (zone_largeur // nb_algos) + 8
+        hauteur_barre = int((temps / temps_max) * zone_hauteur) if temps_max > 0 else 0
+        y = marge_haut + zone_hauteur - hauteur_barre
+
+        couleur = couleurs_barres[i % len(couleurs_barres)]
+        pygame.draw.rect(screen, couleur, (x, y, largeur_barre, hauteur_barre), border_radius=4)
+
+        # valeur au dessus de la barre
+        val_texte = font_valeur.render(f"{temps:.4f}s", True, BLANC)
+        screen.blit(val_texte, val_texte.get_rect(center=(x + largeur_barre // 2, y - 14)))
+
+        # nom de l'algo en dessous (rotation simulee par multi-ligne)
+        mots = name.split()
+        for j, mot in enumerate(mots):
+            mot_texte = font_label.render(mot, True, couleur)
+            screen.blit(mot_texte, mot_texte.get_rect(center=(x + largeur_barre // 2, marge_haut + zone_hauteur + 20 + j * 18)))
+
+    # label axe Y
+    label_y = font_label.render("Temps (secondes)", True, GRIS)
+    label_y_rot = pygame.transform.rotate(label_y, 90)
+    screen.blit(label_y_rot, (10, marge_haut + zone_hauteur // 2 - label_y_rot.get_height() // 2))
+
+    bouton_rect = dessiner_bouton_retour(screen)
+    return bouton_rect
+
+
 def afficher_menu(screen):
     """Affiche le menu de selection sur la fenetre pygame."""
     screen.fill(NOIR)
@@ -286,8 +389,11 @@ def afficher_menu(screen):
         texte = font_option.render(f"  {key}. {name}", True, BLANC)
         screen.blit(texte, (250, y))
 
+    comparaison = font_option.render("  8. Comparaison des performances", True, (46, 204, 113))
+    screen.blit(comparaison, (250, 200 + 8 * 50))
+
     quitter = font_option.render("  0. Quitter", True, (255, 100, 100))
-    screen.blit(quitter, (250, 200 + 8 * 50))
+    screen.blit(quitter, (250, 200 + 9 * 50))
 
     pygame.display.flip()
 
@@ -310,11 +416,29 @@ def main():
                     choix = "0"
                 elif event.type == pygame.KEYDOWN:
                     touche = event.unicode
-                    if touche in VISUAL_ALGORITHMS or touche == "0":
+                    if touche in VISUAL_ALGORITHMS or touche in ("0", "8"):
                         choix = touche
 
         if choix == "0":
             break
+
+        if choix == "8":
+            bouton_rect = benchmark_graphique(screen)
+            if bouton_rect is False:
+                break
+            attente = True
+            while attente:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        en_cours = False
+                        attente = False
+                    elif event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_r:
+                            attente = False
+                    elif event.type == pygame.MOUSEBUTTONDOWN:
+                        if bouton_rect.collidepoint(event.pos):
+                            attente = False
+            continue
 
         # generer une liste aleatoire
         arr = list(range(1, NB_ELEMENTS + 1))
