@@ -35,7 +35,7 @@ if mode == "Tri manuel":
             st.error("Entrez uniquement des nombres valides.")
             lst = []
     else:
-        taille = st.slider("Taille de la liste", 10, 1000, 100)
+        taille = st.slider("Taille de la liste", 10, 50000, 100)
         lst = [random.randint(1, 10000) for _ in range(taille)]
         st.code(f"Liste generee : {lst[:20]}{'...' if len(lst) > 20 else ''}")
 
@@ -81,7 +81,7 @@ if mode == "Tri manuel":
 elif mode == "Benchmark":
     st.header("Benchmark - Comparaison des performances")
 
-    taille = st.slider("Taille de la liste", 100, 20000, 10000, step=100)
+    taille = st.slider("Taille de la liste", 100, 50000, 10000, step=100)
 
     if st.button("Lancer le benchmark", type="primary"):
         grosse_liste = [random.randint(1, 100000) for _ in range(taille)]
@@ -172,7 +172,7 @@ elif mode == "Courbes multi-tailles":
 elif mode == "Compteur d'operations":
     st.header("Compteur de comparaisons et d'echanges")
 
-    taille = st.slider("Taille de la liste", 100, 10000, 1000, step=100)
+    taille = st.slider("Taille de la liste", 100, 50000, 1000, step=100)
 
     if st.button("Analyser", type="primary"):
         grosse_liste = [random.randint(1, 100000) for _ in range(taille)]
