@@ -20,31 +20,69 @@ Ce projet consiste à lui venir en aide en implémentant 7 algorithmes de tri en
 | 6 | Tri par tas | O(N log N) | ✅ |
 | 7 | Tri à peigne | O(N² / 2^p) | ✅ |
 
+## Fonctionnalités
+
+- Tri croissant et décroissant
+- Détection automatique si la liste est déjà triée
+- Compteur d'opérations (comparaisons et échanges) pour chaque algorithme
+- Benchmark séquentiel et multithreading
+- Export des résultats en CSV
+- Tests unitaires complets
+
 ## Utilisation
+
+### Terminal (main.py)
 
 ```bash
 python main.py
 ```
 
 Le programme affiche un menu permettant de :
-1. Choisir un algorithme de tri
+1. Choisir un algorithme et l'ordre de tri (croissant/décroissant)
 2. Saisir une liste de nombres réels
-3. Visualiser l'input et le résultat trié
-4. Comparer les performances de tous les algorithmes (option 8)
+3. Visualiser l'input, le résultat trié, et le compteur d'opérations
+4. Comparer les performances (option 8)
+5. Benchmark multithreading (option 9)
 
-### Interface graphique
+### Interface graphique Pygame (visual.py)
 
 ```bash
 python visual.py
 ```
 
-Lance une visualisation animée du tri sous forme de cercle de couleurs.
+- **C + numéro** : visualisation en cercle de couleurs
+- **B + numéro** : visualisation en barres verticales
+- **8** : diagramme en barres comparatif
+- **9** : courbes d'évolution multi-tailles
+- **R** : retour au menu
+
+### Interface web Streamlit (app.py)
+
+```bash
+streamlit run app.py
+```
+
+Interface web interactive avec :
+- Tri manuel avec graphiques avant/après
+- Benchmark avec diagramme interactif
+- Courbes d'évolution multi-tailles
+- Compteur d'opérations avec graphiques
+
+### Tests unitaires
+
+```bash
+python -m pytest test_sorting.py -v
+```
+
+11 tests couvrant : liste vide, un élément, déjà triée, triée à l'envers, doublons, éléments identiques, nombres négatifs, nombres réels, grande liste aléatoire, compteur d'opérations.
 
 ## Structure du projet
 
-- `sorting.py` : Implémentation des 7 algorithmes de tri
-- `main.py` : Script principal (menu, interaction utilisateur, benchmark)
-- `visual.py` : Interface graphique de visualisation des tris
+- `sorting.py` : Implémentation des 7 algorithmes de tri + classe Stats (compteur d'opérations)
+- `main.py` : Script principal (menu, tri croissant/décroissant, benchmark, multithreading, export CSV)
+- `visual.py` : Interface graphique Pygame (cercle, barres, benchmark, courbes)
+- `app.py` : Interface web Streamlit
+- `test_sorting.py` : Tests unitaires
 - `README.md` : Documentation du projet
 
 ## Analyse de performance
@@ -74,6 +112,8 @@ Le tri rapide est environ **576x plus rapide** que le tri à bulles sur 10 000 �
 ## Conclusion
 
 Ce projet nous a permis de comprendre concrètement la différence entre les complexités algorithmiques. Sur le papier, O(N²) vs O(N log N) peut sembler abstrait, mais en pratique la différence est flagrante : sur 10 000 éléments, on passe de quelques millisecondes à plusieurs secondes.
+
+Le compteur d'opérations confirme cette analyse : les algorithmes O(N²) effectuent des millions de comparaisons là où les O(N log N) n'en font que quelques dizaines de milliers.
 
 Le tri rapide s'impose comme le meilleur choix dans la majorité des cas, ce qui explique pourquoi il est utilisé dans de nombreux langages de programmation (comme la fonction `sorted()` de Python qui utilise Timsort, un hybride entre tri fusion et tri par insertion).
 
