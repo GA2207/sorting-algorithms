@@ -7,17 +7,19 @@ from sorting import ALGORITHMS, Stats
 
 
 def get_user_list():
-    """Demande a l'utilisateur de saisir une liste de nombres reels."""
+    """Demande un nombre N et genere une liste de N elements aleatoires entre 0 et N."""
     while True:
-        raw = input("\nEntrez une liste de nombres reels separes par des espaces :\n> ")
+        raw = input("\nEntrez un nombre N (genere une liste de N elements entre 0 et N) :\n> ").strip()
         try:
-            lst = [float(x) for x in raw.strip().split()]
-            if not lst:
-                print("Erreur : la liste ne peut pas etre vide.")
+            n = int(raw)
+            if n <= 0:
+                print("Erreur : N doit etre un entier strictement positif.")
                 continue
+            lst = [random.randint(0, n) for _ in range(n)]
+            print(f"  Liste generee : {lst if n <= 30 else str(lst[:20]) + f'... ({n} elements)'}")
             return lst
         except ValueError:
-            print("Erreur : veuillez entrer uniquement des nombres valides.")
+            print("Erreur : veuillez entrer un entier valide.")
 
 
 def get_order():
